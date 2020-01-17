@@ -2,20 +2,6 @@
            (replacing the palceholder with your Github name):
            https://api.github.com/users/<your name>
 */
-const userCards = document.querySelector('.cards');
-axios 
-.get('https://api.github.com/users/jvillalp')
-.then(response =>{
-  //step 4
-  console.log(response);
-  response.data.message.forEach(item =>{
-    const newFollower = createCard(item);
-    userCards.appendChild(newFollower);
-  });
-})
-.catch(error =>{
-  console.log('The data was not returned', error);
-})
 
 
 
@@ -42,17 +28,8 @@ axios
           user, and adding that card to the DOM.
 */
 
-const followersArray = [
-  'ZaStack',
-  'dmhabh1992',
-  'tdefriess',
-  'MarioR81',
-  'kaverndsp',
-  'Steven-matos',
-  'amberlowe1001',
-  'FinalBoss',
-
-];
+// const followersArray = []
+//   console.log(followersArray);
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -73,7 +50,36 @@ const followersArray = [
 </div>
 
 */
-function createCard(imgUrl){
+//step 1
+// console.log(entryPoint);
+axios 
+.get('https://api.github.com/users/jvillalp')
+.then(response =>{
+  entryPoint.append(createCard(response));
+})
+.catch(error =>{
+  console.log('The data was not returned', error);
+});
+
+const followersArray = [
+  'mrzacsmith', 'caw442000', 'amberlowe1001', 'haase1020'
+];
+followersArray.forEach(user =>{
+  axios
+        .get('https://api.github.com/' + user)
+        .then(response =>{
+          console.log("hello", response)
+          entryPoint.append(createCard(response.data))
+        })
+        .catch(error =>{
+          console.log('The user was not returned', error);
+        })
+})
+// console.log(response)
+const entryPoint = document.querySelector('.cards');
+
+function createCard(user){
+  // console.log('hello', )
 const   
       card = document.createElement('div'),
       userImg = document.createElement('img'),
@@ -81,7 +87,8 @@ const
       fullName = document.createElement('h3'),
       userName = document.createElement('p'),
       userLocation = document.createElement('p'),
-      userProfile = document.createElement('link'),
+      userProfile = document.createElement('p'),
+      userProfileUrl = document.createElement('a'),
       userFollowers = document.createElement('p'),
       userFollowing = document.createElement('p'),
       userBio = document.createElement('p');
@@ -91,21 +98,30 @@ const
   fullName.classList.add('name');
   userName.classList.add('username');
   
-  userImg.src = imgUrl;
 
-  userLocation.textContent = `Location: ${location}`
-  // userProfile.textContent = 
-  userFollowers.textContent = 13
-  userFollowing.textContent = 4
-  userBio.textContent = `Bio: ${bio}`
+  card.append(userImg);
+  card.append(cardInfo);
+  cardInfo.append(fullName);
+  cardInfo.append(userName);
+  cardInfo.append(userLocation);
+  cardInfo.append(userProfileUrl)
+  cardInfo.append(userFollowers);
+  cardInfo.append(userFollowing);
+  cardInfo.append(userBio);
+
+  userImg.src = user.data.avatar_url;
+  fullName.textContent = user.data.name;
+  userName.textContent = user.data.login;
+  userLocation.textContent = `location: ${user.data.location}`;
+  userProfile.textContent =  `Profile URL: ${user.data.html_url}`;
+  userProfileUrl.href = user.data.html_url;
+  userFollowers.textContent = `Followers: ${user.data.followers}`;
+  userFollowing.textContent = `Following: ${user.data.following}`;
+  bio.textContent = `Bio: ${user.data.bio}`;
+
+  cardInfo.append(userProfile);
 
 return card;
 }
 
-/* List of LS Instructors Github username's: 
-  tetondan
-  dustinmyers
-  justsml
-  luishrd
-  bigknell
-*/
+
